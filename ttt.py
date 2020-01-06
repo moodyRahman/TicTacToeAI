@@ -1,4 +1,6 @@
 import sys
+import time
+import random
 
 class BoardNode(object):
     """docstring for BoardNode."""
@@ -10,12 +12,13 @@ class BoardNode(object):
         self.children = [] # all nodes that can be reached with a single move
 
         self.best_move = None  # cell position (0-8) of the best move from this layout, or -1 if this is a final layout
-        self.moves_to_end = None  # how many moves until the end of the game, if played perfectly.  0 if this is a final layout
+        self.moves_to_end = 0  # how many moves until the end of the game, if played perfectly.  0 if this is a final layout
         self.final_state = None   # expected final state ('x' if 'x' wins, 'o' if 'o' wins, else 'd' for a draw)
 
         self.depth = 0
         self.recent_move = -1
         self.end_state = self.winner()
+        self.score = 0
 
         cx = 0
         co = 0
@@ -50,7 +53,7 @@ class BoardNode(object):
             else:
                 return "d"
 
-    def makechildren(self, depth = 0):
+    def makechildren(self, depth):
         self.final_state = self.winner()
         currboard = []
         for x in self.board:
@@ -61,39 +64,74 @@ class BoardNode(object):
                 child = BoardNode("".join(currboard))
                 child.recent_move = n
                 self.children.append(child)
-                if depth <= 5:
-                    depth = depth + 1
-                    child.makechildren(depth)
+                if depth <= 6:
+                    # depth = depth + 1
+                    child.makechildren(depth + 1)
                     child.depth = depth
-                    depth = depth - 1
+                    # depth = depth - 1
                 currboard[n] = "_"
 
 
     def showallchildren(self, space):
+        if self.depth < 4:
+            for x in self.children:
+                if self.final_state == None:
+                    print(space, x, self.recent_move, self.next_move,  "         depth: ", self.depth)
+                    pass
+                if self.final_state != None:
+                    print(space, x, self.recent_move, self.next_move, "      " , self.final_state, "  won      depth: ", self.depth )
+                    # print(space, x, final_state)
+                x.showallchildren(space + "    ")
+
+
+    def showallminmax(self, space):
+        if self.depth < 4:
+            for x in self.children:
+                if self.final_state == None:
+                    print(space, x, self.recent_move, self.next_move, "      score: ", self.score)
+                    pass
+                if self.final_state != None:
+                    print(space, x, self.recent_move, self.next_move, "      score: ", self.score)
+                    # print(space, x, final_state)
+                x.showallminmax(space + "    ")
+
+    def calcminimax(self):
+        if self.final_state == self.next_move:
+            self.score = 1
+        elif self.final_state == "d":
+            self.score = 0
+        elif self.final_state == None:
+            self.score = 0
+        elif self.final_state != self.next_move:
+            self.score = -1
         for x in self.children:
-            if self.final_state == None:
-                print(space, x, self.recent_move, "         depth: ", self.depth)
-            else:
-                print(space, x, self.recent_move, "      " , self.final_state, "  won      depth: ", self.depth )
-                # print(space, x, final_state)
-            x.showallchildren(space + "    ")
+            x.calcminimax()
 
-
+    def getbestmoves(self):
+        for x in self.children:
+            print(x.score)
 
 
 
 
 d = BoardNode(sys.argv[2])
 
-d.makechildren()
+start = time.time()
 
+d.makechildren(1)
+d.calcminimax()
+d.getbestmoves()
+
+end = time.time()
+
+print(end - start)
 # for x in d.children[0].final_state:
 #     print(x)
 
 # print(d.children[0].final_state)
 
-d.showallchildren("")
+# d.showallminmax("")
 
 f = open(sys.argv[1], "w")
-f.write(str(d.children[0].recent_move))
+f.write(str(d.children[random.randint(0, len(d.children) - 1)].recent_move))
 f.close()

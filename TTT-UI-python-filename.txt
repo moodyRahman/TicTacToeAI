@@ -1,1 +1,1 @@
-/home/moody/projects/ai/TicTacToeAI/TTT-Random-NetLogo.py
+/home/moody/projects/ai/TicTacToeAI/ttt.py
