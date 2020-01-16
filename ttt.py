@@ -211,10 +211,10 @@ d = BoardNode(sys.argv[2])
 start = time.time()
 
 d.makechildren(1)
+d.showallchildren("")
 # d.calcminimax()
 # d.getbestmoves()
 
-minimax(2, computer)
 end = time.time()
 
 print(end - start)
