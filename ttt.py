@@ -99,110 +99,13 @@ class BoardNode(object):
                 x.showallchildren(space + "    ")
 
 
-    def showallminmax(self, space):
-        if self.depth < 100:
-            for x in self.children:
-                if self.current_state == None:
-                    print(space, x, self.recent_move, self.next_move, "      score: ", self.score)
-                    pass
-                if self.current_state != None:
-                    print(space, x, self.recent_move, self.next_move, "      score: ", self.score)
-                    # print(space, x, current_state)
-                x.showallminmax(space + "    ")
-
-    # def calcminimax(self):
-    #     if self.current_state == self.next_move:
-    #         self.score = 1
-    #     elif self.current_state == "d":
-    #         self.score = 0
-    #     elif self.current_state == None:
-    #         self.score = 0
-    #     elif self.current_state != self.next_move:
-    #         self.score = -1
-    #     for x in self.children:
-    #         x.calcminimax()
-    #
-
-    def getbestmoves(self):
-        for mymove in self.children:
-            if mymove.current_state == self.next_move:
-                return mymove.recent_move
-
-            for oppmove in mymove.children:
-                if (mymove.current_state == "x" and oppmove.current_state == "o") or (mymove.current_state == "o" and oppmove.current_state == "x"):
-                    return oppmove.recent_move
-
-                countwinmoves = 0
-                for mynextmove in oppmove.children:
-                    if mynextmove.current_state == self.next_move:
-                        countwinmoves += 1
-                if countwinmoves >= 2:
-                    return mymove.recent_move
-
-                # countoppwinmoves = 0
-                # for mynextmove in oppmove.children:
-                #     if (mynextmove.current_state == "x" and oppmove.current_state == "o") or (mynextmove.current_state == "o" and oppmove.current_state == "x"):
-                #         countoppwinmoves += 1
-                # if countoppwinmoves >= 2:
-                #     return oppmove.recent_move
-        # def mostwins(self):
-        #     winningkids = []
-        #     for mymove in self.children:
-        #         out = 0
-        #         if mymove.current_state == self.next_move:
-        #             out+=
-
-
-        return random.randint(0, len(self.children))
-
-    def minimax(self, depth, player):
-        if self.current_state != None or depth == 0:
-            return calc_score
-        if player == "me":
-            bestscore = -9999999
-            for child in self.children:
-                score = minimax(depth - 1, "them")
-                if score > -9999999:
-                    bestscore = score
-                return bestscore
+    def getbestmoves(self, move):
+        if self.depth == 2:
+            if self.end_state == "x" and
         else:
-            bestscore = 9999999
+            e = 0;
             for child in self.children:
-                score = minimax(depth - 1, "me")
-                if score < bestscore:
-                    bestscore = score
-                return bestscore
-
-
-# def minimax(depth, player)
-#   if gameover || depth == 0
-#     return calculated_score
-#   end
-#   children = all legal moves for player
-#   if player is AI (maximizing player)
-#     best_score = -infinity
-#     for each child
-#       score = minimax(depth - 1, opponent)
-#       if (score > best_score)
-#         best_score = score
-#       end
-#       return best_score
-#     end
-#   else #player is minimizing player
-#     best_score = +infinity
-#     for each child
-#       score = minimax(depth - 1, player)
-#       if (score < best_score)
-#         best_score = score
-#       end
-#       return best_score
-#     end
-#   end
-# end
-
-#then you would call it like
-
-
+                child.getbestmoves(self.next_move)
 
 
 
@@ -225,7 +128,6 @@ print(end - start)
 
 # d.showallminmax("")
 
-f = open(sys.argv[1], "w")
-f.write(str(d.children[random.randint(0, len(d.children) - 1)].recent_move))
-# f.write(str(d.getbestmoves()))
-f.close()
+# f = open(sys.argv[1], "w")
+# f.write(str(m))
+# f.close()
